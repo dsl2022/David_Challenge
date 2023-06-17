@@ -1,9 +1,9 @@
 provider "aws" {
-  region = "us-east-1" # Replace with your desired region
+  region = var.region # Replace with your desired region
 }
 
 resource "aws_s3_bucket" "web_bucket" {
-  bucket = "sre-challenge-2023" # Replace with your desired bucket name
+  bucket = var.bucket_name # Replace with your desired bucket name
   #   acl    = "public-read"
   policy = <<EOF
 {
@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "web_bucket" {
         "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${aws_cloudfront_origin_access_identity.web_identity.id}"
       },
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::sre-challenge-2023/*"
+      "Resource": "arn:aws:s3:::liberia-mission/*"
     }
   ]
 }
@@ -26,32 +26,49 @@ EOF
   }
 }
 
-resource "aws_s3_bucket_object" "index_html" {
-  bucket = aws_s3_bucket.web_bucket.id
-  key    = "index.html"
-  source = "index.html" # Replace with the path to your local index.html file
-
-  content_type = "text/html"
+locals {
+  upload_directory = "../${var.static_content_directory}"
+  app_fileset      = fileset(local.upload_directory, "**/*.*")
 }
-resource "aws_acm_certificate" "tmmlab_certificate" {
-  domain_name       = "tmmlab.net" # Replace with your domain name
+
+# resource "aws_s3_bucket_object" "index_html" {
+#   bucket = aws_s3_bucket.web_bucket.id
+#   key    = "index.html"
+#   source = "index.html" # Replace with the path to your local index.html file
+
+#   content_type = "text/html"
+
+# }
+
+resource "aws_s3_bucket_object" "liberia_static_files" {
+  for_each     = local.app_fileset
+  bucket       = aws_s3_bucket.web_bucket.bucket
+  key          = replace(each.value, local.upload_directory, "")
+  source       = "${local.upload_directory}${each.value}"
+  content_type = lookup(var.mime_types, split(".", each.value)[length(split(".", each.value)) - 1])
+  # server_side_encryption = "aws:kms"
+  # kms_key_id             = aws_s3_bucket.up_bucket.kms_key_id
+  # etag                   = filemd5("${local.upload_directory}${each.value}")
+}
+resource "aws_acm_certificate" "neighborly_certificate" {
+  domain_name       = "liberiamedicalmission.org" # Replace with your domain name
   validation_method = "DNS"
 
   subject_alternative_names = [
-    "*.tmmlab.net", # Replace with additional domain or subdomain names
+    "*.liberiamedicalmission.org", # Replace with additional domain or subdomain names
   ]
 
   tags = {
-    Name = "Example Certificate"
+    Name = "LMM Certificate"
   }
 }
 
-resource "aws_route53_zone" "tmmlab_zone" {
-  name = "tmmlab.net"
+resource "aws_route53_zone" "neighborly_zone" {
+  name = "liberiamedicalmission.org"
 }
-resource "aws_route53_record" "tmmlab_dns_record" {
-  zone_id = aws_route53_zone.tmmlab_zone.zone_id
-  name    = "tmmlab.net" # Replace with your desired DNS name
+resource "aws_route53_record" "neighborly_dns_record" {
+  zone_id = aws_route53_zone.neighborly_zone.zone_id
+  name    = "liberiamedicalmission.org" # Replace with your desired DNS name
   type    = "A"
 
   alias {
@@ -61,9 +78,9 @@ resource "aws_route53_record" "tmmlab_dns_record" {
   }
 }
 
-resource "aws_route53_record" "tmmlab_sub_dns_record" {
-  zone_id = aws_route53_zone.tmmlab_zone.zone_id
-  name    = "test.tmmlab.net" # Replace with your desired DNS name
+resource "aws_route53_record" "neighborly_sub_dns_record" {
+  zone_id = aws_route53_zone.neighborly_zone.zone_id
+  name    = "dev.liberiamedicalmission.org" # Replace with your desired DNS name
   type    = "A"
 
   alias {
@@ -74,7 +91,7 @@ resource "aws_route53_record" "tmmlab_sub_dns_record" {
 }
 resource "aws_route53_record" "example_certificate_validation" {
   for_each = {
-    for dvo in aws_acm_certificate.tmmlab_certificate.domain_validation_options : dvo.domain_name => {
+    for dvo in aws_acm_certificate.neighborly_certificate.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
@@ -86,15 +103,30 @@ resource "aws_route53_record" "example_certificate_validation" {
   records         = [each.value.record]
   ttl             = 300
   type            = each.value.type
-  zone_id         = aws_route53_zone.tmmlab_zone.zone_id
+  zone_id         = aws_route53_zone.neighborly_zone.zone_id
 }
 
+resource "aws_route53_record" "mx_record" {
+  zone_id = aws_route53_zone.neighborly_zone.zone_id
+  name    = ""
+  type    = "MX"
+  ttl     = 300
+  records = [
+    "1 ASPMX.L.GOOGLE.COM.",
+    "5 ALT1.ASPMX.L.GOOGLE.COM.",
+    "5 ALT2.ASPMX.L.GOOGLE.COM.",
+    "10 ALT3.ASPMX.L.GOOGLE.COM.",
+    "10 ALT4.ASPMX.L.GOOGLE.COM."
+  ]
+}
+
+
 resource "aws_acm_certificate_validation" "example" {
-  certificate_arn         = aws_acm_certificate.tmmlab_certificate.arn
+  certificate_arn         = aws_acm_certificate.neighborly_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.example_certificate_validation : record.fqdn]
 }
 resource "aws_acm_certificate_validation" "example_certificate_validation" {
-  certificate_arn         = aws_acm_certificate.tmmlab_certificate.arn
+  certificate_arn         = aws_acm_certificate.neighborly_certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.example_certificate_validation : record.fqdn]
   # vaxlidation_record_fqdns = [aws_route53_record.example_certificate_validation.fqdn]
 }
@@ -113,7 +145,7 @@ resource "aws_cloudfront_distribution" "web_distribution" {
       origin_access_identity = aws_cloudfront_origin_access_identity.web_identity.cloudfront_access_identity_path
     }
   }
-  aliases = [ "test.tmmlab.net"]
+  aliases = ["dev.liberiamedicalmission.org"]
   default_cache_behavior {
     target_origin_id = aws_s3_bucket.web_bucket.id
     forwarded_values {
@@ -138,7 +170,7 @@ resource "aws_cloudfront_distribution" "web_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = aws_acm_certificate.tmmlab_certificate.arn
+    acm_certificate_arn = aws_acm_certificate.neighborly_certificate.arn
     ssl_support_method  = "sni-only"
   }
 }

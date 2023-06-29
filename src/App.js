@@ -8,6 +8,7 @@ import News from './components/News';
 import Blogs from './components/Blogs';
 import Donate from './components/Donate';
 import ChatBot from './components/ChatBot';
+import Login from './components/Login'
 // import AppBar from './components/AppBar';
 import { AppBar, Toolbar, Typography, Link as MuiLink } from '@mui/material';
 const App = () => {
@@ -67,6 +68,15 @@ const App = () => {
             >
               Donate
             </MuiLink>
+            <MuiLink
+              component={Link}
+              to="/login"
+              color="inherit"
+              underline="none"
+              sx={{ mx: 1 }}
+            >
+              Login
+            </MuiLink>
           </nav>
         </Toolbar>
       </AppBar>
@@ -77,6 +87,7 @@ const App = () => {
           <Route path="/news" element={<News />} />
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/donate" element={<Donate />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Container>
       <ChatBot />

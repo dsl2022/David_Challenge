@@ -6,7 +6,9 @@ import { makeStyles } from '@mui/styles';
 import TopColumn from './Components/topColumn';
 import BottomColumn from './Components/bottomColumn'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import placeholder from '../../assets/images/placeholder.png';
+import YoutubeVideo from './Components/youtubeVideo';
+import Footer from '../Footer/index'
+
 const theme = createTheme();
 const useStyles = makeStyles((theme) => ({
   outerContainer: {
@@ -32,6 +34,7 @@ const Component = () => {
   return (
     <Grid container spacing={2}>
       <Container>
+        <YoutubeVideo/>
         <TopColumn />
         <div>
           <Grid container spacing={2}>
@@ -47,6 +50,7 @@ const Component = () => {
           </Grid>
         </div>
         <BottomColumn/>
+        <Footer/>
       </Container>
     </Grid>
   );

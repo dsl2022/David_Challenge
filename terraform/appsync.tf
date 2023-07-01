@@ -8,7 +8,5 @@ resource "aws_appsync_graphql_api" "liberiamed" {
     default_action      = "ALLOW"
   }
   # Add other AppSync API configurations as needed
-  schema {
-    definition = file("../${path.module}/schema/schema.graphql")
-  }
+  schema = file("../schema/schema.graphql")
 }

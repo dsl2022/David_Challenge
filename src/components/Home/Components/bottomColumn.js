@@ -23,7 +23,7 @@ function BottomColumn(){
         <Grid align="center">
             <img src={mission1Photo}/>
         </Grid>
-        <Grid  sx={{mt:5}} align="center">
+        <Grid  sx={{mt:5,mb:5}} align="center">
 
         <Button variant="contained" color="info">View more</Button>
         </Grid>

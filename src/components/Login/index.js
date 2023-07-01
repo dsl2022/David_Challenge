@@ -29,7 +29,7 @@ const LoginForm = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 16,
+          gap: 6,
           maxWidth: 320,
           padding: 16,
           backgroundColor: '#f5f5f5',

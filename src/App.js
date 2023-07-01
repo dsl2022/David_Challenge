@@ -9,14 +9,24 @@ import Blogs from './components/Blogs';
 import Donate from './components/Donate';
 import ChatBot from './components/ChatBot';
 import Login from './components/Login'
+import SignupForm from './components/Signup'
+import logo from './assets/images/logo.png'
 // import AppBar from './components/AppBar';
-import { AppBar, Toolbar, Typography, Link as MuiLink } from '@mui/material';
+import { IconButton, AppBar, Toolbar, Typography, Link as MuiLink } from '@mui/material';
 const App = () => {
   return (
     <Router>
       {/* <AppBar/> */}
       <AppBar color="transparent" position="static">
         <Toolbar>
+        <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <img src={logo} alt="Icon" style={{ width: 100, height: 34 }} />
+          </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <MuiLink component={Link} to="/" color="inherit" underline="none">
               Liberia Medical Mission
@@ -77,6 +87,15 @@ const App = () => {
             >
               Login
             </MuiLink>
+            <MuiLink
+              component={Link}
+              to="/signup"
+              color="inherit"
+              underline="none"
+              sx={{ mx: 1 }}
+            >
+              Signup
+            </MuiLink>
           </nav>
         </Toolbar>
       </AppBar>
@@ -88,6 +107,7 @@ const App = () => {
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignupForm />} />
         </Routes>
       </Container>
       <ChatBot />

@@ -19,7 +19,7 @@ const SignupForm = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh',
+        // height: '100vh',
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
@@ -30,7 +30,7 @@ const SignupForm = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 16,
+          gap: 6,
           maxWidth: 320,
           padding: 16,
           backgroundColor: '#f5f5f5',

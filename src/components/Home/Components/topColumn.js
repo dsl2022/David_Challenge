@@ -4,7 +4,7 @@ import { Grid, Typography, Button, Paper, Container } from '@mui/material';
 function TopColumn() {
   return (
     <Container>
-      <Grid sx={{ mt: 10 }} align="center">
+      <Grid sx={{ mt: 1 }} align="center">
         <img src={placeholder} />
       </Grid>
       <Grid sx={{ mt: 5 }} align="center">

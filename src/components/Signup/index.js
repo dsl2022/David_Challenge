@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
-
+import { signUp } from "../../auth"
+import { useNavigate } from 'react-router-dom';
 const SignupForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    // You can perform signup/registration operations
+    setError("")
+    try {
+        await signUp(name, email, password)
+        navigate('/signupSuccess');
+      } catch (err) {
+        setError(err.message)
+      }
   };
 
   return (
@@ -63,7 +71,9 @@ const SignupForm = () => {
           Sign Up
         </Button>
       </Box>
+      {error && <p>{error}</p>}
     </Box>
+    
   );
 };
 

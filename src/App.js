@@ -11,6 +11,8 @@ import ChatBot from './components/ChatBot';
 import Login from './components/Login'
 import SignupForm from './components/Signup'
 import logo from './assets/images/logo.png'
+import SignUpSuccess from './components/Utils/SignUpSuccess';
+import ConfirmSignup from './components/Utils/ConfirmSignup';
 // import AppBar from './components/AppBar';
 import { IconButton, AppBar, Toolbar, Typography, Link as MuiLink } from '@mui/material';
 const App = () => {
@@ -108,6 +110,8 @@ const App = () => {
           <Route path="/donate" element={<Donate />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignupForm />} />
+          <Route path="/signupSuccess" element={<SignUpSuccess />}></Route>
+          <Route path="/confirmSignup" element={<ConfirmSignup />}></Route>
         </Routes>
       </Container>
       <ChatBot />

@@ -1,30 +1,39 @@
 import React, { useState } from 'react';
 import { Typography, Box, TextField, Button } from '@mui/material';
-import { signIn } from '../../auth';
-import { useNavigate } from 'react-router-dom';
-export default function Login() {
-  const navigate = useNavigate();
+import { confirmSignUp } from '../../auth';
+
+export default function ConfirmSignUp() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [code, setCode] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
-      const signinRes = await signIn(username, password);
-      console.log({signinRes})
-      // Redirect to the app's main page or dashboard
+      await confirmSignUp(username, code);
+      setSuccess(true);
     } catch (err) {
-      if(err.code==="UserNotConfirmedException")navigate('/confirmSignup');
       setError(err.message);
     }
   };
 
+  if (success) {
+    return (
+      <Box>
+        <Typography variant="h2">Confirmation successful!</Typography>
+        <Typography variant="body1">
+          You can now log in with your credentials. Go rock that app!
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box>
-      <Typography variant="h2">Login</Typography>
+      <Typography variant="h2">Confirm Sign Up</Typography>
       <form onSubmit={handleSubmit}>
         <TextField
           type="text"
@@ -36,16 +45,16 @@ export default function Login() {
           margin="normal"
         />
         <TextField
-          type="password"
-          label="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          type="text"
+          label="Confirmation code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
           variant="outlined"
           fullWidth
           margin="normal"
         />
         <Button type="submit" variant="contained" fullWidth>
-          Login
+          Confirm
         </Button>
       </form>
       {error && <Typography variant="body1">{error}</Typography>}

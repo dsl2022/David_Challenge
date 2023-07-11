@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Fab, Dialog, DialogContent, TextField, Button } from '@mui/material';
+import { Fab, Dialog, DialogContent, TextField, Button, useMediaQuery } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
-
 const ChatBot = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 

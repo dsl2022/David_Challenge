@@ -7,7 +7,6 @@ const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -22,13 +21,13 @@ const SignupForm = () => {
 
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        // height: '100vh',
-      }}
+      // sx={{
+      //   display: 'flex',
+      //   flexDirection: 'column',
+      //   alignItems: 'center',
+      //   justifyContent: 'center',
+      //   // height: '100vh',
+      // }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
         Sign Up
@@ -38,10 +37,7 @@ const SignupForm = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 6,
-          maxWidth: 320,
-          padding: 16,
-          backgroundColor: '#f5f5f5',
+          gap: 3,      
           borderRadius: 4,
         }}
         onSubmit={handleSubmit}
@@ -49,6 +45,7 @@ const SignupForm = () => {
         <TextField
           label="Name"
           type="text"
+          fullWidth
           required
           value={name}
           onChange={(e) => setName(e.target.value)}

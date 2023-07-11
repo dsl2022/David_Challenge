@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Typography, Box, TextField, Button } from '@mui/material';
-import { signIn } from '../../auth';
+// import { signIn } from '../../auth';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/authContext';
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  const { user, signIn } = useContext(AuthContext)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
-      const signinRes = await signIn(username, password);
-      console.log({signinRes})
+      await signIn(username, password);
+      navigate('/dashboard')
       // Redirect to the app's main page or dashboard
     } catch (err) {
       if(err.code==="UserNotConfirmedException")navigate('/confirmSignup');

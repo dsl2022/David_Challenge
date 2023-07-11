@@ -1,11 +1,16 @@
 import React from 'react';
-
+import Donorbox from '../Donorbox';
+import { Grid, Typography, Button, Paper, Container } from '@mui/material';
 const Donate = () => {
   return (
-    <div>
-      <h1>Donate</h1>
-      <p>Donate page content goes here.</p>
-    </div>
+    <Container>
+      
+      <Grid align="center">
+      <Typography variant='h3' align='center'>Donate</Typography>
+      <Donorbox/>
+      </Grid>
+      
+    </Container>
   );
 };
 
